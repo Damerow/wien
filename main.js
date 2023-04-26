@@ -46,17 +46,17 @@ async function showStops(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
     //console.log(response, jsondata);
-    L.geoJSON(jsondata, {
+        L.geoJSON(jsondata, {
                 onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             let lat = feature.geometry.coordinates[1];
             let lng = feature.geometry.coordinates[0];
             let streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
             layer.bindPopup(`
-            &#x1F68C;<strong>${prop.STAT_NAME}</strong><br> 
+            <i class="fa-solid fa-bus"></i><strong>${prop.STAT_NAME}</strong><br> 
             <em>${prop.LINE_NAME}</em><br> 
             Öffnungszeiten: ${prop.OEFFNUNGSZEIT}<br>
-            <a href="${streetViewUrl}" target="_blank">Google Street View</a>
+            <i class="fa-solid fa-street-view"></i> <a href="${streetViewUrl}" target="_blank">Google Street View</a>
                 `);
         }
     }).addTo(themaLayer.stops);
