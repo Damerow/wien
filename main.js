@@ -47,60 +47,57 @@ async function showStops(url) {
     let jsondata = await response.json();
     //console.log(response, jsondata);
     L.geoJSON(jsondata, {
-        onEachFeature: function(feature, layer) {
-            let popupContent = `
-                <strong>${feature.properties.NAME}</strong><br>
-                <em>${feature.properties.ADRESSE}</em><br>
-                Öffnungszeiten: ${feature.properties.OEFFNUNGSZEIT}
-            `;
-            layer.bindPopup(popupContent);
+                onEachFeature: function (feature, layer) {
+            let prop = feature.properties;
+            let lat = feature.geometry.coordinates[1];
+            let lng = feature.geometry.coordinates[0];
+            let streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
+            layer.bindPopup(`
+            &#x1F68C;<strong>${prop.STAT_NAME}</strong><br> 
+            <em>${prop.LINE_NAME}</em><br> 
+            Öffnungszeiten: ${prop.OEFFNUNGSZEIT}<br>
+            <a href="${streetViewUrl}" target="_blank">Google Street View</a>
+                `);
         }
-        }).addTo(themaLayer.stops);
-      }
+    }).addTo(themaLayer.stops);
+}
 showStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 // Vienna Sightseeing Linien
 async function showLines(url) {
-        let response = await fetch(url);
-        let jsondata = await response.json();
-        //console.log(response, jsondata);
-        L.geoJSON(jsondata).addTo(themaLayer.lines);
-    }
+    let response = await fetch(url);
+    let jsondata = await response.json();
+    //console.log(response, jsondata);
+    L.geoJSON(jsondata).addTo(themaLayer.lines);
+}
 showLines("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKLINIEVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
-    // Fußgängerzonen
-    async function showZones(url) {
-        let response = await fetch(url);
-        let jsondata = await response.json();
-        //console.log(response, jsondata);
-        L.geoJSON(jsondata).addTo(themaLayer.zones);
-    }
-    showZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json");
+// Fußgängerzonen
+async function showZones(url) {
+    let response = await fetch(url);
+    let jsondata = await response.json();
+    //console.log(response, jsondata);
+    L.geoJSON(jsondata).addTo(themaLayer.zones);
+}
+showZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json");
 
-    // Sehenswürdigkeiten
-    async function showSites(url) {
-        let response = await fetch(url);
-        let jsondata = await response.json();
-        //console.log(response, jsondata);
-        L.geoJSON(jsondata, {
-            onEachFeature: function (feature, layer) {
-                let prop = feature.properties;
-                layer.bindPopup(`
+// Sehenswürdigkeiten
+async function showSites(url) {
+    let response = await fetch(url);
+    let jsondata = await response.json();
+    //console.log(response, jsondata);
+    L.geoJSON(jsondata, {
+        onEachFeature: function (feature, layer) {
+            let prop = feature.properties;
+            layer.bindPopup(`
                 <img src="${prop.THUMBNAIL}" alt="*">
                 <h4><a href="${prop.WEITERE_INF}" target="Wien">${prop.NAME}</a></h4>
                 <address>${prop.ADRESSE}</address>
             `);
-                //console.log(feature.properties, prop.NAME);
-            }
-        }).addTo(themaLayer.sites);
-    }
-    showSites("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json");
+            //console.log(feature.properties, prop.NAME);
+        }
+    }).addTo(themaLayer.sites);
+}
+showSites("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json");
 
-
-
-
-//L.geoJSON ist eine Funktion in der JavaScript-Bibliothek Leaflet, mit der GeoJSON-Daten auf eine Karte gezeichnet werden können. Es handelt sich dabei um eine Schicht (Layer),
-// die mit GeoJSON-Daten als Eingabe erstellt wird und Marker oder Formen auf der Karte erzeugt. Die L.geoJSON-Funktion analysiert die GeoJSON-Daten und erstellt Leaflet-Objekte 
-//wie L.Marker und L.Polygon aus ihnen. Die erstellten Objekte werden dann der Schicht hinzugefügt, die auf der Karte gezeichnet wird. Die L.geoJSON-Funktion bietet auch eine Vielzahl
-//von Optionen zur Anpassung der Darstellung der GeoJSON-Features, wie z.B. Stiloptionen, Popup-Text, Ereignishandler und vieles mehr. Sie kann auch in Verbindung mit anderen Funktionen
-//wie L.marker, L.circleMarker oder L.popup verwendet werden, um komplexe interaktive Kartenanwendungen zu erstellen.
+L.control.fullscreen().addTo(map);
