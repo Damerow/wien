@@ -48,10 +48,15 @@ async function showStops(url) {
     //console.log(response, jsondata);
     L.geoJSON(jsondata, {
         onEachFeature: function(feature, layer) {
-            layer.bindPopup(feature.properties.NAME);
+            let popupContent = `
+                <strong>${feature.properties.NAME}</strong><br>
+                <em>${feature.properties.ADRESSE}</em><br>
+                Öffnungszeiten: ${feature.properties.OEFFNUNGSZEIT}
+            `;
+            layer.bindPopup(popupContent);
         }
-    }).addTo(themaLayer.stops);
-}
+        }).addTo(themaLayer.stops);
+      }
 showStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 // Vienna Sightseeing Linien
