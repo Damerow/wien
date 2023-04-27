@@ -149,7 +149,7 @@ async function showSites(url) {
             return L.marker(latlng, {
                 icon: L.icon({
                     iconUrl: 'icons/photo.png',
-                    iconAnchor: [16, 37],
+                    iconAnchor: [16, 37], //Werte werden nach größe des Photos in den Pixel
                     popupAncher: [0, -37],
                 })
             });
