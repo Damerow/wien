@@ -16,7 +16,7 @@ let map = L.map("map").setView([
 let themaLayer = {
     stops: L.featureGroup(),
     lines: L.featureGroup().addTo(map),
-    zones: L.featureGroup(),
+    zones: L.featureGroup().addTo(map),
     sites: L.featureGroup()
 }
 
@@ -81,9 +81,10 @@ async function showLines(url) {
     L.geoJSON(jsondata, {
         style: function (feature) {
             return {
-                color: lineColors[feature.properties.LINE_ID],
+                color: lineColors[feature.properties.LINE_ID], //Farbe Fuchsia
                 weight: 3,
-                dashArray: [10, 6],
+                dashArray: [10, 4],
+                opacity: [0, 1]
             };
         },
         onEachFeature: function (feature, layer) {
@@ -112,6 +113,14 @@ async function showZones(url) {
     let jsondata = await response.json();
     //console.log(response, jsondata);
     L.geoJSON(jsondata, {
+        style: function (feature) {
+            return {
+                color: "FUCHSIA", //Bei String Anführungszeichen oben
+                weight: 1,          //Immer mit Key-Value-Pare arbeiten!
+                fillOpacity: 0.1,
+                opacity: 0.4,
+            };
+        },
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
