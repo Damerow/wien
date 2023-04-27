@@ -55,7 +55,7 @@ async function showStops(url) {
             layer.bindPopup(`
             <i class="fa-solid fa-bus"></i><strong>${prop.STAT_NAME}</strong><br> 
             <em>${prop.LINE_NAME}</em><br> 
-            Öffnungszeiten: ${prop.OEFFNUNGSZEIT}<br>
+            Stationsnummer: ${prop.STAT_ID}<br>
             <i class="fa-solid fa-street-view"></i> <a href="${streetViewUrl}" target="_blank">Google Street View</a>
                 `);
         }
@@ -77,9 +77,23 @@ async function showZones(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
     //console.log(response, jsondata);
-    L.geoJSON(jsondata).addTo(themaLayer.zones);
+    L.geoJSON(jsondata, {
+        onEachFeature: function(feature, layer) {
+            let prop = feature.properties;
+            layer.bindPopup(`
+            <h4>Fußgängerzone ${prop.ADRESSE}</h4>
+            <p><i class="fa-regular fa-clock"></i>
+               ${prop.ZEITRAUM}
+            </p>
+            <p><i class="fa-solid fa-circle-info"></i>
+               ${prop.AUSN_TEXT}
+            </p>
+        `);
+        }
+    }).addTo(themaLayer.zones);
 }
 showZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json");
+
 
 // Sehenswürdigkeiten
 async function showSites(url) {
