@@ -73,6 +73,7 @@ async function showLines(url) {
 showLines("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKLINIEVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
 // Fußgängerzonen
+// Oder zeichen mit || machen
 async function showZones(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
@@ -83,10 +84,10 @@ async function showZones(url) {
             layer.bindPopup(`
             <h4>Fußgängerzone ${prop.ADRESSE}</h4>
             <p><i class="fa-regular fa-clock"></i>
-               ${prop.ZEITRAUM}
+               ${prop.ZEITRAUM || "dauerhaft"}
             </p>
             <p><i class="fa-solid fa-circle-info"></i>
-               ${prop.AUSN_TEXT}
+               ${prop.AUSN_TEXT || "keine Ausnahmen"}
             </p>
         `);
         }
