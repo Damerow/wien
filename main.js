@@ -17,7 +17,8 @@ let themaLayer = {
     stops: L.featureGroup(),
     lines: L.featureGroup(),
     zones: L.featureGroup(),
-    sites: L.featureGroup().addTo(map)
+    sites: L.featureGroup(),
+    hotels: L.featureGroup().addTo(map),
 }
 
 // Hintergrundlayer
@@ -33,7 +34,8 @@ let layerControl = L.control.layers({
     "Vienna Sightseeing Haltestellen": themaLayer.stops,
     "Vienna Sightseeing Linien": themaLayer.lines,
     "Fußgängerzonen": themaLayer.zones,
-    "Sehenswürdigkeiten": themaLayer.sites
+    "Sehenswürdigkeiten": themaLayer.sites,
+    "Hotels": themaLayer.hotels
 }).addTo(map);
 
 // Maßstab
@@ -162,7 +164,7 @@ async function showSites(url) {
 
     L.geoJSON(jsondata, {
         pointToLayer: function (feature, latlng) {
-            L.marker(latlng).addTo(map)
+
             return L.marker(latlng, {
                 icon: L.icon({
                     iconUrl: 'icons/photo.png',
@@ -185,3 +187,31 @@ async function showSites(url) {
 showSites("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json");
 
 L.control.fullscreen().addTo(map);
+
+// Hotels
+async function showHotels(url) {
+    let response = await fetch(url);
+    let jsondata = await response.json();
+    L.geoJSON(jsondata, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: "icons/hotel.png",
+                    iconAnchor: [16, 37], //Werte werden nach größe des Photos in den Pixel
+                    popupAncher: [0, -37],
+                })
+            });
+        },
+        onEachFeature: function (feature, layer) {
+            let prop = feature.properties;
+            layer.bindPopup(`
+            <h4>${prop.BETRIEBSART_TXT}<h4><br> 
+            Adresse: <em>${prop.ADRESSE}</em><br>
+            Tel.: <em>${prop.Kontakt}</em>
+                Stationsnummer: ${prop.STAT_ID}<br>
+                    `);
+        }
+    }).addTo(themaLayer.hotels);
+}
+                    showHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json");
+
