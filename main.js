@@ -45,8 +45,32 @@ L.control.scale({
 async function showStops(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
-
+    let stopColors = { //https://clrs.cc/
+        "1": "#FF4136", //Red Line"
+        "2": "#FFDC00", //Yellow Line"
+        "3": "#0074D9", //Blue Line"
+        "4": "#2ECC40", //Green Line"
+        "5": "#AAAAAA", //Grey Line"
+        "6": "#FF851B", //"Orange Line"
+    }
     L.geoJSON(jsondata, {
+        style: function (feature) {
+            return {
+                color: stopColors[feature.properties.LINE_ID], //Farbe Fuchsia
+                weight: 3,
+                dashArray: [10, 4],
+                opacity: [0, 1]
+            };
+        },
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'icons/busstop.png',
+                    iconAnchor: [16, 37], //Werte werden nach größe des Photos in den Pixel
+                    popupAncher: [0, -37],
+                })
+            });
+        },
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             let lat = feature.geometry.coordinates[1];
