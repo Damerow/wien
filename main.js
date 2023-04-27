@@ -10,14 +10,14 @@ let stephansdom = {
 // Karte initialisieren
 let map = L.map("map").setView([
     stephansdom.lat, stephansdom.lng
-], 12);
+], 15);
 
 // thematische Layer
 let themaLayer = {
     stops: L.featureGroup(),
-    lines: L.featureGroup(),
+    lines: L.featureGroup().addTo(map),
     zones: L.featureGroup(),
-    sites: L.featureGroup().addTo(map)
+    sites: L.featureGroup()
 }
 
 // Hintergrundlayer
