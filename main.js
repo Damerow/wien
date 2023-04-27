@@ -15,9 +15,9 @@ let map = L.map("map").setView([
 // thematische Layer
 let themaLayer = {
     stops: L.featureGroup(),
-    lines: L.featureGroup().addTo(map),
-    zones: L.featureGroup().addTo(map),
-    sites: L.featureGroup()
+    lines: L.featureGroup(),
+    zones: L.featureGroup(),
+    sites: L.featureGroup().addTo(map)
 }
 
 // Hintergrundlayer
@@ -45,7 +45,7 @@ L.control.scale({
 async function showStops(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    //console.log(response, jsondata);
+
     L.geoJSON(jsondata, {
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
@@ -77,7 +77,7 @@ async function showLines(url) {
         "6": "#FF851B", //"Orange Line"
     }
 
-    //console.log(response, jsondata);
+
     L.geoJSON(jsondata, {
         style: function (feature) {
             return {
@@ -100,7 +100,7 @@ async function showLines(url) {
             </p>
         `);
             lineNames[prop.LINE_ID] = prop.LINE_NAME;
-            console.log(lineNames)
+
         }
     }).addTo(themaLayer.lines);
 }
@@ -142,8 +142,18 @@ showZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 async function showSites(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    //console.log(response, jsondata);
+
     L.geoJSON(jsondata, {
+        pointToLayer: function (feature, latlng) {
+            L.marker(latlng).addTo(map)
+            return L.marker(latlng, {
+                icon: L.icon({
+                    iconUrl: 'icons/photo.png',
+                    iconAnchor: [16, 37],
+                    popupAncher: [0, -37],
+                })
+            });
+        },
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
@@ -151,7 +161,7 @@ async function showSites(url) {
                 <h4><a href="${prop.WEITERE_INF}" target="Wien">${prop.NAME}</a></h4>
                 <address>${prop.ADRESSE}</address>
             `);
-            //console.log(feature.properties, prop.NAME);
+
         }
     }).addTo(themaLayer.sites);
 }
