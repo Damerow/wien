@@ -67,8 +67,37 @@ showStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 async function showLines(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
+    let lineNames = {};
+    let lineColors = { //https://clrs.cc/
+        "1": "#FF4136", //Red Line"
+        "2": "#FFDC00", //Yellow Line"
+        "3": "#0074D9", //Blue Line"
+        "4": "#2ECC40", //Green Line"
+        "5": "#AAAAAA", //Grey Line"
+        "6": "#FF851B", //"Orange Line"
+    }
+
     //console.log(response, jsondata);
-    L.geoJSON(jsondata).addTo(themaLayer.lines);
+    L.geoJSON(jsondata, {
+        style: function (feature) {
+            return {color: lineColors[feature.properties.LINE_ID]};
+        },
+        onEachFeature: function (feature, layer) {
+            let prop = feature.properties;
+            layer.bindPopup(`
+            <h4><i class="fa-solid fa-bus"></i> ${prop.LINE_NAME}</h4>
+            <p>
+            <i class="fa-regular fa-circle-stop"></i> ${prop.FROM_NAME}<br>
+            <i class="fa-solid fa-down-long"></i>
+            <br>
+            <i class="fa-regular fa-circle-stop"></i> ${prop.TO_NAME}
+            <br>
+            </p>
+        `);
+            lineNames[prop.LINE_ID] = prop.LINE_NAME;
+            console.log(lineNames)
+        }
+    }).addTo(themaLayer.lines);
 }
 showLines("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKLINIEVSLOGD&srsName=EPSG:4326&outputFormat=json");
 
@@ -79,7 +108,7 @@ async function showZones(url) {
     let jsondata = await response.json();
     //console.log(response, jsondata);
     L.geoJSON(jsondata, {
-        onEachFeature: function(feature, layer) {
+        onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
             <h4>Fußgängerzone ${prop.ADRESSE}</h4>
