@@ -46,8 +46,8 @@ async function showStops(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
     //console.log(response, jsondata);
-        L.geoJSON(jsondata, {
-                onEachFeature: function (feature, layer) {
+    L.geoJSON(jsondata, {
+        onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             let lat = feature.geometry.coordinates[1];
             let lng = feature.geometry.coordinates[0];
