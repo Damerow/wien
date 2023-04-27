@@ -205,13 +205,19 @@ async function showHotels(url) {
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
-            <h4>${prop.BETRIEBSART_TXT}<h4><br> 
+            <h3>${prop.BETRIEB}</h3>
+            <h4>${prop.BETRIEBSART_TXT} ${prop.KATEGORIE_TXT}<h4><br>
             Adresse: <em>${prop.ADRESSE}</em><br>
-            Tel.: <em>${prop.Kontakt}</em>
-                Stationsnummer: ${prop.STAT_ID}<br>
+            Tel.: <em>${prop.KONTAKT_TEL}</em><br>
+                E-MAIL: ${prop.KONTAKT_EMAIL}<br>
+                <a href="${prop.WEBLINK1}">Homepage</a>
                     `);
         }
     }).addTo(themaLayer.hotels);
 }
                     showHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json");
 
+
+
+                    //Workload nach Sterne mit ICONS versorgen -> Variable definieren mit ||    
+                    // KATEGORIEN_TXT <- IF Abfrage
