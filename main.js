@@ -80,7 +80,11 @@ async function showLines(url) {
     //console.log(response, jsondata);
     L.geoJSON(jsondata, {
         style: function (feature) {
-            return {color: lineColors[feature.properties.LINE_ID]};
+            return {
+                color: lineColors[feature.properties.LINE_ID],
+                weight: 3,
+                dashArray: [10, 6],
+            };
         },
         onEachFeature: function (feature, layer) {
             let prop = feature.properties;
