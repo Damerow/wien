@@ -198,6 +198,7 @@ async function showHotels(url) {
         pointToLayer: function (feature, latlng) {
             // Icons basierend auf der Kategorie des Hotels
             //Conditional Statements (Bedienungsanleitungen)
+            // ist-ist == Datentypen werden versucht verglichen (etwas lockerer), ist-ist-ist === muss das gleiche auf beiden Seiten stehen
             if (feature.properties.KATEGORIE_TXT == "1*") {
                 icon = "icons/hotel_1star.png";
             } else if (feature.properties.KATEGORIE_TXT == "2*") {
