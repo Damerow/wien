@@ -196,16 +196,16 @@ async function showHotels(url) {
     
     L.geoJSON(jsondata, {
         pointToLayer: function(feature, latlng) {
-
-            if (feature.properties.KATEGORIE_TXT == "1 Stern") {
+            // Icons basierend auf der Kategorie des Hotels:
+            if (feature.properties.KATEGORIE_TXT == "Hotel 1*") {
                 iconUrl = "icons/hotel_1star.png";
-            } else if (feature.properties.KATEGORIE == "2 Sterne") {
+            } else if (feature.properties.KATEGORIE_TXT == "Hotel 2*") {
                 iconUrl = "icons/hotel_2stars.png";
-            } else if (feature.properties.KATEGORIE == "3 Sterne") {
+            } else if (feature.properties.KATEGORIE_TXT == "Hotel 3*") {
                 iconUrl = "icons/hotel_3stars.png";
-            } else if (feature.properties.KATEGORIE == "4 Sterne") {
+            } else if (feature.properties.KATEGORIE_TXT == "Hotel 4*") {
                 iconUrl = "icons/hotel_4stars.png";
-            } else if (feature.properties.KATEGORIE == "5 Sterne") {
+            } else if (feature.properties.KATEGORIE_TXT == "Hotel 5*") {
                 iconUrl = "icons/hotel_5stars.png";
             } else {
                 iconUrl = "icons/hotel.png"; // Icon für Hotels ohne Sternekategorie
