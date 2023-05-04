@@ -10,7 +10,7 @@ let stephansdom = {
 // Karte initialisieren
 let map = L.map("map").setView([
     stephansdom.lat, stephansdom.lng
-], 15);
+], 13);
 
 // thematische Layer
 let themaLayer = {
@@ -193,32 +193,32 @@ L.control.fullscreen().addTo(map);
 async function showHotels(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    
+
     L.geoJSON(jsondata, {
-        pointToLayer: function(feature, latlng) {
+        pointToLayer: function (feature, latlng) {
             // Icons basierend auf der Kategorie des Hotels:
-            if (feature.properties.KATEGORIE_TXT == "Hotel 1*") {
-                iconUrl = "icons/hotel_1star.png";
-            } else if (feature.properties.KATEGORIE_TXT == "Hotel 2*") {
-                iconUrl = "icons/hotel_2stars.png";
-            } else if (feature.properties.KATEGORIE_TXT == "Hotel 3*") {
-                iconUrl = "icons/hotel_3stars.png";
-            } else if (feature.properties.KATEGORIE_TXT == "Hotel 4*") {
-                iconUrl = "icons/hotel_4stars.png";
-            } else if (feature.properties.KATEGORIE_TXT == "Hotel 5*") {
-                iconUrl = "icons/hotel_5stars.png";
+            if (feature.properties.KATEGORIE_TXT == "1*") {
+                icon = "icons/hotel_1star.png";
+            } else if (feature.properties.KATEGORIE_TXT == "2*") {
+                icon = "icons/hotel_2stars.png";
+            } else if (feature.properties.KATEGORIE_TXT == "3*") {
+                icon = "icons/hotel_3stars.png";
+            } else if (feature.properties.KATEGORIE_TXT == "4*") {
+                icon = "icons/hotel_4stars.png";
+            } else if (feature.properties.KATEGORIE_TXT == "5*") {
+                icon = "icons/hotel_5stars.png";
             } else {
-                iconUrl = "icons/hotel.png"; // Icon für Hotels ohne Sternekategorie
+                icon = "icons/hotel.png"; // Icon für Hotels ohne Sternekategorie
             }
             return L.marker(latlng, {
                 icon: L.icon({
-                    iconUrl: "icons/hotel.png",
+                    iconUrl: icon,
                     iconAnchor: [16, 37],
                     popupAnchor: [0, -37],
                 })
             });
         },
-        onEachFeature: function(feature, layer) {
+        onEachFeature: function (feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
                 <h3>${prop.BETRIEB}</h3>
