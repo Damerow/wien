@@ -10,14 +10,14 @@ let stephansdom = {
 // Karte initialisieren
 let map = L.map("map").setView([
     stephansdom.lat, stephansdom.lng
-], 13);
+], 15);
 
 // thematische Layer
 let themaLayer = {
-    stops: L.featureGroup(),
-    lines: L.featureGroup(),
-    zones: L.featureGroup(),
-    sites: L.featureGroup(),
+    stops: L.featureGroup().addTo(map),
+    lines: L.featureGroup().addTo(map),
+    zones: L.featureGroup().addTo(map),
+    sites: L.featureGroup().addTo(map),
     hotels: L.featureGroup().addTo(map),
 }
 
@@ -196,7 +196,8 @@ async function showHotels(url) {
 
     L.geoJSON(jsondata, {
         pointToLayer: function (feature, latlng) {
-            // Icons basierend auf der Kategorie des Hotels:
+            // Icons basierend auf der Kategorie des Hotels
+            //Conditional Statements (Bedienungsanleitungen)
             if (feature.properties.KATEGORIE_TXT == "1*") {
                 icon = "icons/hotel_1star.png";
             } else if (feature.properties.KATEGORIE_TXT == "2*") {
