@@ -14,10 +14,10 @@ let map = L.map("map").setView([
 
 // thematische Layer
 let themaLayer = {
-    stops: L.featureGroup().addTo(map),
-    lines: L.featureGroup().addTo(map),
-    zones: L.featureGroup().addTo(map),
-    sites: L.featureGroup().addTo(map),
+    stops: L.featureGroup(),
+    lines: L.featureGroup(),
+    zones: L.featureGroup(),
+    sites: L.featureGroup(),
     hotels: L.featureGroup().addTo(map),
 }
 
@@ -193,9 +193,23 @@ L.control.fullscreen().addTo(map);
 async function showHotels(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    //console.log(response, jsondata);
+    
     L.geoJSON(jsondata, {
         pointToLayer: function(feature, latlng) {
+
+            if (feature.properties.KATEGORIE_TXT == "1 Stern") {
+                iconUrl = "icons/hotel_1star.png";
+            } else if (feature.properties.KATEGORIE == "2 Sterne") {
+                iconUrl = "icons/hotel_2stars.png";
+            } else if (feature.properties.KATEGORIE == "3 Sterne") {
+                iconUrl = "icons/hotel_3stars.png";
+            } else if (feature.properties.KATEGORIE == "4 Sterne") {
+                iconUrl = "icons/hotel_4stars.png";
+            } else if (feature.properties.KATEGORIE == "5 Sterne") {
+                iconUrl = "icons/hotel_5stars.png";
+            } else {
+                iconUrl = "icons/hotel.png"; // Icon für Hotels ohne Sternekategorie
+            }
             return L.marker(latlng, {
                 icon: L.icon({
                     iconUrl: "icons/hotel.png",
