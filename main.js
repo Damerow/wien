@@ -14,10 +14,10 @@ let map = L.map("map").setView([
 
 // thematische Layer
 let themaLayer = {
-    stops: L.featureGroup(),
-    lines: L.featureGroup(),
-    zones: L.featureGroup(),
-    sites: L.featureGroup(),
+    stops: L.featureGroup().addTo(map),
+    lines: L.featureGroup().addTo(map),
+    zones: L.featureGroup().addTo(map),
+    sites: L.featureGroup().addTo(map),
     hotels: L.featureGroup().addTo(map),
 }
 
@@ -189,33 +189,36 @@ showSites("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 L.control.fullscreen().addTo(map);
 
 // Hotels
+//mapicons.mapsmarker.com für Hotel-Icons
 async function showHotels(url) {
     let response = await fetch(url);
     let jsondata = await response.json();
+    //console.log(response, jsondata);
     L.geoJSON(jsondata, {
-        pointToLayer: function (feature, latlng) {
+        pointToLayer: function(feature, latlng) {
             return L.marker(latlng, {
                 icon: L.icon({
                     iconUrl: "icons/hotel.png",
-                    iconAnchor: [16, 37], //Werte werden nach größe des Photos in den Pixel
-                    popupAncher: [0, -37],
+                    iconAnchor: [16, 37],
+                    popupAnchor: [0, -37],
                 })
             });
         },
-        onEachFeature: function (feature, layer) {
+        onEachFeature: function(feature, layer) {
             let prop = feature.properties;
             layer.bindPopup(`
-            <h3>${prop.BETRIEB}</h3>
-            <h4>${prop.BETRIEBSART_TXT} ${prop.KATEGORIE_TXT}<h4><br>
-            Adresse: <em>${prop.ADRESSE}</em><br>
-            Tel.: <em>${prop.KONTAKT_TEL}</em><br>
-                E-MAIL: ${prop.KONTAKT_EMAIL}<br>
-                <a href="${prop.WEBLINK1}">Homepage</a>
-                    `);
+                <h3>${prop.BETRIEB}</h3>
+                <h4>${prop.BETRIEBSART_TXT} ${prop.KATEGORIE_TXT}</h4>
+                <hr>
+                Addr.: ${prop.ADRESSE}<br>
+                Tel.: <a href="tel:${prop.KONTAKT_TEL}">${prop.KONTAKT_TEL}</a><br>
+                <a href="mailto:${prop.KONTAKT_EMAIL}">${prop.KONTAKT_EMAIL}</a><br>
+                <a href="${prop.WEBLINK1}">Homepage</a><br>
+            `);
         }
     }).addTo(themaLayer.hotels);
 }
-                    showHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json");
+showHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json");
 
 
 
