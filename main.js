@@ -18,7 +18,9 @@ let themaLayer = {
     lines: L.featureGroup().addTo(map),
     zones: L.featureGroup().addTo(map),
     sites: L.featureGroup().addTo(map),
-    hotels: L.featureGroup().addTo(map),
+    hotels: L.markerClusterGroup({
+        disableClusteringAtZoom: 17 //Eingangslayer zoom von 15 auf 17 -> zwei mal rein zoomen, dann werden alle aufgelöst
+        }),
 }
 
 // Hintergrundlayer
@@ -35,7 +37,7 @@ let layerControl = L.control.layers({
     "Vienna Sightseeing Linien": themaLayer.lines,
     "Fußgängerzonen": themaLayer.zones,
     "Sehenswürdigkeiten": themaLayer.sites,
-    "Hotels": themaLayer.hotels
+    "Hotels": themaLayer.hotels.addTo(map)
 }).addTo(map);
 
 // Maßstab
